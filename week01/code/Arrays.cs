@@ -17,7 +17,7 @@ public static class Arrays
         List<double> results = new();
 
         //FOR loop to multiply "number" with number from 1 to "length" to get multiples, add them to results
-        for (double i = 1; i < length; i++)
+        for (double i = 1; i <= length; i++)
         {
             results.Add(number * i);
         }
@@ -53,3 +53,4 @@ public static class Arrays
         
     }
 }
+
