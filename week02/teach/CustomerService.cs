@@ -11,9 +11,11 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
+        // Scenario: The AddNewCustomer method shall enqueue a new customer into the queue
         // Expected Result: 
         Console.WriteLine("Test 1");
+
+        
 
         // Defect(s) Found: 
 
