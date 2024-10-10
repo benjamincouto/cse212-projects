@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -21,8 +22,29 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var pairsSet = new HashSet<string>(words);
+        var pairsList = new List<string>();
+        
+
+        foreach (var word in words)
+        {
+
+            if (word[0] == word[1]) continue;
+
+            // reverse to compare
+            var reversedWord = new string(word.Reverse().ToArray());
+
+            // check for the reversedWord
+            if (pairsSet.Contains(reversedWord))
+            {
+                pairsList.Add($"{word} & {reversedWord}");
+
+                // remove word and reversedWord from pairsSet
+                pairsSet.Remove(word);
+                pairsSet.Remove(reversedWord);
+            };
+        }
+        return pairsList.ToArray();
     }
 
     /// <summary>
@@ -43,6 +65,20 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            string degree = fields[3].Trim();
+            
+            // check if the degree is in the dictionary
+            if (!degrees.ContainsKey(degree))
+            {
+                degrees[degree] = 1;
+            }
+            
+            // if the degree is in the dictionary, update the value
+            else
+            {
+                degrees[degree] += 1;
+            }
+
         }
 
         return degrees;
@@ -67,7 +103,64 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        var letterCountDict1 = new Dictionary<char, int>();
+        var letterCountDict2 = new Dictionary<char, int>();
+
+        // remove spaces and make it lower case
+        string modWord1 = word1.Replace(" ", "").ToLower();
+        string modWord2 = word2.Replace(" ", "").ToLower();
+
+        // check if words are different length
+        if (modWord1.Length != modWord2.Length)
+        {
+            return false;
+        }
+
+        // loop through first word
+        foreach (char letter in modWord1)
+        {
+            
+            // check if letter already in dictionary, if not present, add it
+            if (!letterCountDict1.ContainsKey(letter))
+            {
+                letterCountDict1[letter] = 1;
+            }
+            // if the letter is already present in the dictionary, add 1 to the value
+            else
+            {
+                letterCountDict1[letter] += 1;
+            }
+
+        }
+
+        // loop through second word
+        foreach (char letter in modWord2)
+        {
+            
+            // check if letter already in dictionary, if not present, add it
+            if (!letterCountDict2.ContainsKey(letter))
+            {
+                letterCountDict2[letter] = 1;
+            }
+            // if the letter is already present in the dictionary, add 1 to the value
+            else
+            {
+                letterCountDict2[letter] += 1;
+            }
+
+        }
+
+        foreach (var kvp in letterCountDict1)
+        {
+            // Check if the letter exists in both dictionaries and the count
+            if (!letterCountDict2.ContainsKey(kvp.Key) || letterCountDict2[kvp.Key] != kvp.Value)
+            {
+                return false;
+            }
+        }
+
+        return true; 
+
     }
 
     /// <summary>
@@ -101,6 +194,21 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+
+        // list to store earthquake info
+        var earthquakes = new List<string>();
+        
+        // loop through feature
+        foreach (var feature in featureCollection.Features)
+        {
+            var place = feature.Properties.place;
+            var mag = feature.Properties.mag; 
+            
+            // format each string
+            earthquakes.Add($"{place} - Mag {mag}");
+        }
+
+        
+        return earthquakes.ToArray();
     }
 }
