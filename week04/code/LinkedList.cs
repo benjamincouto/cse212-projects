@@ -32,7 +32,21 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void InsertTail(int value)
     {
-        // TODO Problem 1
+        // Create new node
+        Node newNode = new(value);
+        // If the list is empty, then point both head and tail to the new node.
+        if (_tail is null)
+        {
+            _head = newNode;
+            _tail = newNode;
+        }
+        // If the list is not empty, then only head will be affected.
+        else
+        {
+            newNode.Prev = _tail; // Set the prev of the new node to the current tail
+            _tail.Next = newNode; // Set the next of the current tail to the new node
+            _tail = newNode; // Update the tail to point to the new node
+        }
     }
 
 
@@ -64,7 +78,21 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void RemoveTail()
     {
-        // TODO Problem 2
+        // If the list has only one item in it, then set head and tail 
+        // to null resulting in an empty list.  This condition will also
+        // cover an empty list.  Its okay to set to null again.
+        if (_head == _tail)
+        {
+            _head = null;
+            _tail = null;
+        }
+        // If the list has more than one item in it, then only the tail
+        // will be affected.
+        else if (_tail is not null)
+        {
+            _tail.Prev!.Next = null; // Disconnect the last node from the second to last node
+            _tail = _tail.Prev; // Update the tail to point to the second to last node
+        }
     }
 
     /// <summary>
@@ -108,7 +136,39 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void Remove(int value)
     {
-        // TODO Problem 3
+        // If the list has only one item in it, then set head and tail 
+        // to null resulting in an empty list.  This condition will also
+        // cover an empty list.  Its okay to set to null again.
+        if (_head == _tail)
+        {
+            _head = null;
+            _tail = null;
+        }
+
+        // If the list has more than one item in it
+        else if (_head is not null)
+        {
+            // Start at the beginning (_head)
+            var current = _head;
+
+            // Loop through linked list to find the specific node
+            while (current !=null)
+            {
+                // when value is found, remove node
+                if (current.Data == value)
+                {
+                    current.Prev!.Next = current.Next;
+                    if (current.Next != null)
+                    {
+                        current.Next.Prev = current.Prev;
+                    }
+
+                    return; //exit
+                }
+                current = current.Next;
+            }
+
+        }
     }
 
     /// <summary>
@@ -116,7 +176,33 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void Replace(int oldValue, int newValue)
     {
-        // TODO Problem 4
+        // If the list has only one item in it, then set head and tail 
+        // to null resulting in an empty list.  This condition will also
+        // cover an empty list.  Its okay to set to null again.
+        if (_head == _tail)
+        {
+            _head = null;
+            _tail = null;
+        }
+
+        // If the list has more than one item in it
+        else if (_head is not null)
+        {
+            // Start at the beginning (_head)
+            var current = _head;
+
+            // Loop through linked list to find the specific node
+            while (current !=null)
+            {
+                // when value is found, remove node
+                if (current.Data == oldValue)
+                {
+                    current.Data = newValue;
+                }
+                current = current.Next;
+            }
+
+        }
     }
 
     /// <summary>
@@ -146,8 +232,12 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public IEnumerable Reverse()
     {
-        // TODO Problem 5
-        yield return 0; // replace this line with the correct yield return statement(s)
+        var curr = _tail; // Start at the end since this is a backward iteration.
+        while (curr is not null)
+        {
+            yield return curr.Data; // Provide (yield) each item to the user
+            curr = curr.Prev; // Go backward in the linked list
+        }
     }
 
     public override string ToString()
@@ -168,8 +258,10 @@ public class LinkedList : IEnumerable<int>
     }
 }
 
-public static class IntArrayExtensionMethods {
-    public static string AsString(this IEnumerable array) {
+public static class IntArrayExtensionMethods 
+{
+    public static string AsString(this IEnumerable array) 
+    {
         return "<IEnumerable>{" + string.Join(", ", array.Cast<int>()) + "}";
     }
 }
